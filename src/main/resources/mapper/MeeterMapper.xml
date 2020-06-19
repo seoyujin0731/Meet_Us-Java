@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Meet_Us.meeter.dao.MeeterMapper">
+
+<cache flushInterval="1000" />
+
+<select id="selectHomeMeetingList" resultType="Meet_Us.meeter.vo.MeetingBoardVo">
+SELECT 
+	* 
+FROM 
+	MEETING_BOARD 
+WHERE 
+	MB_DELFLAG='N'AND MB_MEMBER != MB_CURRENT_MEMBER 
+ORDER BY 
+	MB_VIEW_COUNT DESC 
+LIMIT 0, 3
+</select>
+
+<select id="selectSimilarMeeting" parameterType="hashmap" resultType="Meet_Us.meeter.vo.MeetingBoardVo">
+SELECT 
+	* 
+FROM 
+	MEETING_BOARD 
+WHERE MB_PURPOSE=#{MB_PURPOSE} AND MB_DELFLAG='N' AND MB_MEMBER != MB_CURRENT_MEMBER AND MB_NO != #{MB_NO}
+ORDER BY 
+	RAND() LIMIT 3
+</select>
+
+
+<insert id="insertMeetingBoard">
+INSERT INTO MEETING_BOARD(				
+	MB_WRITER										
+    , MB_MEMBER			
+    , MB_MEETING_DATE	
+    , MB_MEETING_TIME
+    , MB_PURPOSE		
+    , MB_PLACE			
+    , MB_TITLE				
+    , MB_CONTENTS
+    , MB_LIMIT_AGE_MIN				
+    , MB_LIMIT_AGE_MAX
+    , MB_LIMIT_GENDER	
+    , MB_LIMIT_OTHER 	
+    )
+    VALUES(
+    #{MB_WRITER}
+    , #{MB_MEMBER}
+    , #{MB_MEETING_DATE}
+    , #{MB_MEETING_TIME}
+    , #{MB_PURPOSE}
+    , #{MB_PLACE}
+    , #{MB_TITLE}
+    , #{MB_CONTENTS}
+    , #{MB_LIMIT_AGE_MIN}	
+    , #{MB_LIMIT_AGE_MAX}				
+    , #{MB_LIMIT_GENDER}
+    , #{MB_LIMIT_OTHER}
+)
+</insert>
+
+<update id = "modifyMeetingBoard" >
+UPDATE
+	MEETING_BOARD
+SET
+	MB_ModiDt = NOW()
+    , MB_MEMBER			= #{MB_MEMBER}
+    , MB_MEETING_DATE	= #{MB_MEETING_DATE}
+    , MB_MEETING_TIME	= #{MB_MEETING_TIME}
+    , MB_PURPOSE		= #{MB_PURPOSE}
+    , MB_PLACE			= #{MB_PLACE}
+    , MB_TITLE			= #{MB_TITLE}
+    , MB_CONTENTS		= #{MB_CONTENTS}
+    , MB_LIMIT_AGE_MIN	= #{MB_LIMIT_AGE_MIN}
+    , MB_LIMIT_AGE_MAX	= #{MB_LIMIT_AGE_MAX}
+    , MB_LIMIT_GENDER	= #{MB_LIMIT_GENDER}
+    , MB_LIMIT_OTHER	= #{MB_LIMIT_OTHER}
+WHERE
+	MB_NO = #{MB_NO}
+</update>
+  
+<update id="viewCountIncrease">
+     UPDATE 
+     	MEETING_BOARD 
+     SET 
+     	MB_VIEW_COUNT = MB_VIEW_COUNT+1 
+     WHERE 
+     	MB_NO = #{no}
+</update>
+       
+<select id="selectMeetingList" parameterType="hashmap" resultType="Meet_Us.meeter.vo.MeetingBoardVo" >
+	<![CDATA[
+		SELECT
+						*
+		FROM 
+	               		MEETING_BOARD
+		WHERE 
+	               		MB_DELFLAG='N'
+		ORDER BY
+				   		MB_NO DESC
+		LIMIT 
+						#{pageStart}, #{perPageNum}
+	]]>
+</select>
+
+<select id="selectCountMeetingList" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+    					@rownum:=@rownum+1 No,
+   					 	MB_NO,
+  					  	MB_DELFLAG
+		FROM 
+						MEETING_BOARD,
+						(SELECT @rownum:=0) r
+   		WHERE
+       				    MB_DELFLAG = 'N'
+	]]>
+</select>
+
+<select id="imagePath" resultType="String">
+select FILE_PATH FROM MEETING_BOARD_FILE WHERE UP_SEQ = #{no} AND DELFLAG ='N' LIMIT 1;
+</select>
+
+<select id="selectOne" resultType="Meet_Us.meeter.vo.MeetingBoardVo">
+	SELECT * FROM MEETING_BOARD WHERE MB_NO = #{MB_NO}
+</select>
+
+<select id="selectMeetingDetail" resultType="Meet_Us.meeter.vo.MeetingBoardVo">
+	<![CDATA[
+		SELECT 
+						*
+		FROM 
+						MEETING_BOARD,
+		  				(SELECT @rownum:=0) r
+		WHERE 
+						MB_DELFLAG = 'N'
+		AND 
+						MB_NO = #{MB_NO}
+	]]>
+</select>
+
+<select id="selectCountSearchMeetingList" parameterType="Meet_Us.meeter.vo.PageCriteria" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+    					@rownum:=@rownum+1 No
+                        , MB_NO
+                        , MB_VIEW_COUNT
+                        , MB_MEMBER
+                        , MB_CURRENT_MEMBER
+                        , MB_MEETING_DATE
+                        , MB_MEETING_TIME
+                        , MB_PURPOSE
+                        , MB_PLACE
+                        , MB_TITLE
+		FROM 
+						MEETING_BOARD,
+						(SELECT @rownum:=0) r
+   		WHERE
+                        MB_PLACE LIKE CONCAT('%', #{PlaceKeyword}, '%')
+						OR MB_PURPOSE LIKE CONCAT('%', #{PurposeKeyword}, '%')
+						OR MB_MEETING_DATE LIKE CONCAT('%', #{DateKeyword}, '%')
+                        OR MB_TITLE LIKE CONCAT('%', #{TitleKeyword}, '%')
+                        AND  MB_DELFLAG = 'N'
+	]]>
+</select>
+
+<select id="selectSearchMeetingList" resultType="Meet_Us.meeter.vo.MeetingBoardVo">
+	<![CDATA[
+		SELECT 
+    					@rownum:=@rownum+1 No
+                        , MB_NO
+                        , MB_WRITER
+                        , MB_VIEW_COUNT
+                        , MB_MEMBER
+                        , MB_CURRENT_MEMBER
+                        , MB_MEETING_DATE
+                        , MB_MEETING_TIME
+                        , MB_PURPOSE
+                        , MB_PLACE
+                        , MB_TITLE
+		FROM 
+						MEETING_BOARD,
+						(SELECT @rownum:=0) r
+   		WHERE
+                        MB_PLACE LIKE CONCAT('%', #{PlaceKeyword}, '%')
+						OR MB_PURPOSE LIKE CONCAT('%', #{PurposeKeyword}, '%')
+						OR MB_MEETING_DATE LIKE CONCAT('%', #{DateKeyword}, '%')
+                        OR MB_TITLE LIKE CONCAT('%', #{TitleKeyword}, '%')
+                        AND  MB_DELFLAG = 'N'
+       	ORDER BY                   
+						NO DESC, MB_NO DESC
+		LIMIT 
+						#{pageStart}, #{perPageNum}
+	]]>
+</select>
+
+	<insert id="fileInsert" parameterType="Meet_Us.board.vo.FileVo">
+		INSERT INTO
+		MEETING_BOARD_FILE (UP_SEQ, FILE_NAME, FILE_REAL_NAME, FILE_PATH)
+		VALUES (#{up_Seq},#{file_Name},#{file_Real_Name},#{file_Path})
+	</insert>
+	
+	<select id="selectMeetingImageUrl" resultType="String">
+	SELECT FILE_PATH FROM MEETING_BOARD_FILE WHERE UP_SEQ = #{MB_NO} AND DELFLAG = 'N'
+	</select>
+	
+	<update id="MeetingDelete">
+		UPDATE MEETING_BOARD SET MB_DELFLAG = 'Y' WHERE MB_NO = #{MB_NO}
+	</update>
+	
+	<update id="MeetingDeleteImage">
+		UPDATE MEETING_BOARD_FILE SET DELFLAG = 'Y' WHERE UP_SEQ = #{MB_NO}
+	</update>
+	
+	<select id="selectImage" resultType="Meet_Us.meeter.vo.ImageVo">
+		select * from MEETING_BOARD_FILE WHERE UP_SEQ = #{MB_NO}
+	</select>
+	
+<!-- 	댓글 -->
+	<select id="replyList" parameterType="int" resultType="Meet_Us.meeter.vo.MeetBoardReplyVo">
+      SELECT 
+               MB_NO,
+               BOARD_REPLY_NO,
+			   BOARD_REPLY_WRITER,
+			   BOARD_REPLY_CONTENT,
+			   date_format(BOARD_REPLY_INSERTDATE, '%M %d. %Y %H :%i') BOARD_REPLY_INSERTDATE,
+			   date_format(BOARD_REPLY_INSERTDATE, '%M %d. %Y %H :%i') BOARD_REPLY_UPDATEDATE,
+               p.FILE_PATH
+      FROM 
+               MEET_BOARD_REPLY r
+	  LEFT JOIN
+			PROFILE_FILE p	
+	  on 
+			r.BOARD_REPLY_WRITER=p.USER_NAME
+      WHERE 
+               r.MB_NO=#{mb_no}
+      AND
+               r.BOARD_REPLY_DEFLAG='N' AND p.DELFLAG = 'N'
+   </select>
+   
+   <insert id="insertReply" parameterType="Meet_Us.meeter.vo.MeetBoardReplyVo">
+      INSERT 
+      INTO 
+               MEET_BOARD_REPLY
+               (
+               MB_NO,
+               BOARD_REPLY_WRITER,
+               BOARD_REPLY_CONTENT,
+               BOARD_REPLY_INSERTDATE
+               )
+      VALUES
+               (
+               #{mb_no},
+               #{board_reply_writer},
+               #{board_reply_content},
+               now()
+               )
+   </insert>
+   
+   <update id="replyDelete" parameterType="int">
+      UPDATE 
+               MEET_BOARD_REPLY 
+      SET 
+               BOARD_REPLY_DEFLAG='Y' 
+      WHERE 
+               BOARD_REPLY_NO=#{board_reply_no}
+   </update>
+   
+   <select id="replyCount" parameterType="int" resultType="int">
+      SELECT 
+               COUNT(*)
+      FROM 
+               MEET_BOARD_REPLY
+      WHERE 
+               MB_NO=#{mb_no}
+      AND 
+               BOARD_REPLY_DEFLAG='N'
+   </select>
+   
+   <insert id="MeetingAttend" parameterType="hashmap">
+   INSERT INTO MEETING_ATTEND(UP_SEQ, ATTEND_NAME) VALUES(#{MB_NO}, #{name})
+   </insert>
+   
+   <update id="CurrentCountInc">
+   UPDATE
+   		MEETING_BOARD
+   SET 
+   		MB_CURRENT_MEMBER = MB_CURRENT_MEMBER+1
+   WHERE
+   		MB_NO=#{MB_NO}
+   </update>
+   
+   <select id="AttendMember" resultType="Meet_Us.meeter.vo.AttendUserInfo">
+   SELECT ma.ATTEND_NAME, pf.FILE_PATH FROM (SELECT * FROM MEETING_ATTEND WHERE UP_SEQ=#{MB_NO}) ma 
+   left join PROFILE_FILE pf ON ma.ATTEND_NAME = pf.USER_NAME WHERE pf.DELFLAG='N'
+   </select>
+   
+   <delete id="MeetingAttendCancel" parameterType="hashmap">
+   DELETE FROM MEETING_ATTEND WHERE ATTEND_NAME = #{name} AND UP_SEQ = #{MB_NO}
+   </delete>
+   
+   <update id="CurrentCountDec">
+   UPDATE
+   		MEETING_BOARD
+   SET 
+   		MB_CURRENT_MEMBER = MB_CURRENT_MEMBER-1
+   WHERE
+   		MB_NO=#{MB_NO}
+   </update>
+   
+   <select id="metterListAdmin" resultType="Meet_Us.meeter.vo.MeetingBoardVo">
+   SELECT 
+            *
+   FROM 
+            MEETING_BOARD
+   WHERE 
+            MB_DELFLAG='N'
+   ORDER BY 
+            MB_CrtDt DESC
+   
+   </select> 
+   
+   <select id="userSettingMeeter" parameterType="String" resultType="Meet_Us.meeter.vo.MeetingBoardVo">
+   SELECT 
+            MB_NO,
+            MB_MEETING_DATE,
+            MB_TITLE
+   FROM 
+            MEETING_BOARD
+   WHERE 
+            MB_WRITER=#{mb_writer}
+   AND
+            MB_DELFLAG='N'
+   </select>
+   
+   <select id="myAttendList" resultType="Meet_Us.meeter.vo.MeetingBoardVo">
+   SELECT mb.* FROM MEETING_BOARD mb JOIN MEETING_ATTEND ma ON mb.MB_NO = ma.UP_SEQ WHERE ATTEND_NAME = #{name}
+   </select>
+   
+   <select id="LoginUserProfile" resultType="String">
+   SELECT FILE_PATH FROM PROFILE_FILE WHERE USER_NAME=#{name} AND DELFLAG = 'N'
+   </select>
+   
+   
+   <select id="SelectRegisterMeeting" resultType="int">
+   SELECT PUSH_READY_MEETING_SEQ FROM PUSH_READY_TABLE
+   </select>
+   
+   <insert id="registerMeeting">
+   INSERT 
+      INTO 
+               PUSH_READY_TABLE
+               (PUSH_READY_MEETING_SEQ)
+      VALUES
+               (#{MB_NO})
+   </insert>
+   
+   <update id="pushCountIcre" >
+    UPDATE
+   		PUSH_READY_TABLE
+   SET 
+   		PUSH_COUNT = PUSH_COUNT+1
+   WHERE
+   		PUSH_READY_MEETING_SEQ=#{MB_NO}
+   </update>
+   
+   <select id="registerUserToken" resultType="Meet_Us.meeter.vo.PushUsertokens">
+   SELECT ma.*, pu.PUSH_USER_TOKEN FROM (SELECT * FROM MEETING_ATTEND WHERE UP_SEQ=#{MB_NO}) ma 
+   LEFT JOIN PUSH_USER pu ON ma.ATTEND_NAME = pu.PUSH_USER_NAME WHERE pu.PUSH_DELFLAG='N'
+   </select>
+   
+   <select id="pushImage" resultType="String">
+   SELECT FILE_PATH FROM MEETING_BOARD_FILE WHERE UP_SEQ=#{MB_NO} ORDER BY SEQ ASC LIMIT 0,1;
+   </select>
+   
+   <select id="userLimit" resultType="Meet_Us.userTeam.vo.UserTeamVo">
+   SELECT USER_ID, USER_NAME, USER_GENDER, USER_AGE
+   FROM MEET_USER
+   WHERE USER_NAME = #{name}
+   AND  USER_AUTHORITY='Y'
+   </select>
+   
+   <select id="masterToken" resultType="String">
+   SELECT PUSH_USER_TOKEN FROM PUSH_USER WHERE PUSH_USER_NAME = #{name}
+   </select>
+   
+</mapper>

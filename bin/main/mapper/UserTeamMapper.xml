@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Meet_Us.userTeam.dao.UserTeamMapper">
+
+   <!--아이디 중복 체크 -->
+   <select id="userIdCheck" parameterType="String" resultType="int">
+   SELECT 
+            COUNT(*) 
+   FROM 
+            MEET_USER 
+   WHERE 
+            USER_ID = #{user_id}
+   </select>
+   
+    <select id="nameIsCheck" parameterType="String" resultType="int">
+   SELECT 
+            COUNT(*) 
+   FROM 
+            MEET_USER 
+   WHERE 
+            USER_NAME = #{user_name}
+   </select>
+   
+   <select id="emailIsCheck" parameterType="String" resultType="int">
+   SELECT 
+            COUNT(*) 
+   FROM 
+            MEET_USER 
+   WHERE 
+            USER_EMAIL = #{user_email}
+   </select>
+   
+   <select id="seqlIsCheck" parameterType="int" resultType="int">
+   SELECT 
+            COUNT(*) 
+   FROM 
+            MEET_USER 
+   WHERE 
+            USER_SEQ=  #{user_seq}
+   </select>
+   
+   <insert id="userInsert" parameterType="Meet_Us.userTeam.vo.UserTeamVo">
+   INSERT INTO 
+   MEET_USER(   
+            USER_SEQ,
+            USER_ID,
+            USER_PASSWORD,
+            USER_EMAIL,
+            USER_NAME,
+            USER_AGE,
+            USER_GENDER,
+            USER_DEFAULTADDRESS,
+            USER_AUTHORITY,
+            USER_KAKAOIMG) 
+   VALUES(
+            #{user_seq},
+            #{user_id},
+            #{user_password},
+            #{user_email},
+            #{user_name},
+            DATE_FORMAT(now(), '%Y') - #{user_age} +1,
+            #{user_gender},
+            'null',
+            #{user_authority},
+            #{user_kakaoImg}
+            )
+   </insert>
+   
+   <select id="userIdMin" resultType="int">
+   SELECT 
+            COUNT(USER_EMAIL) USER_SEQ 
+   FROM 
+            MEET_USER
+   </select>
+   
+   <!--    이메일 인증 확인 로직 -->
+   <select id="emailConfirm" parameterType="Meet_Us.userTeam.vo.UserTeamVo" resultType="int">
+   SELECT 
+            count(USER_SEQ) 
+   FROM 
+            MEET_USER
+   WHERE 
+            USER_AUTHORITY=#{user_authority}
+   AND       
+            USER_EMAIL=#{user_email}
+   </select>
+   
+   <!--    이메일 인증이 성공하면 수정하는 로직 -->
+   <update id="updateEmailConfirm" parameterType="String">
+   UPDATE 
+            MEET_USER 
+   SET 
+            USER_AUTHORITY="Y" 
+   WHERE       
+            USER_EMAIL=#{user_email}
+   </update>
+   
+   <!--    회원 아이디 찾기 -->
+   <select id="SeachUserId" parameterType="Meet_Us.userTeam.vo.UserTeamVo" resultType="String">   
+   SELECT 
+            USER_ID
+   FROM 
+            MEET_USER
+   WHERE 
+            USER_NAME=#{user_name}
+   AND 
+            USER_EMAIL=#{user_email}
+   AND         
+            USER_AUTHORITY='Y'
+   </select>
+   
+   <!--    회원 비밀번호 찾기 -->
+   <select id="SeachUserPw" parameterType="Meet_Us.userTeam.vo.UserTeamVo" resultType="int">
+   SELECT 
+            COUNT(USER_SEQ)
+   FROM        
+            MEET_USER
+   where
+            USER_ID=#{user_id}
+   AND
+            USER_EMAIL=#{user_email}
+   AND         
+            USER_NAME=#{user_name}
+   AND         
+            USER_AUTHORITY='Y'
+   </select>
+   
+   
+   <!--    비밀번호 업데이트 -->
+   <update id="UpdateUserPw" parameterType="Meet_Us.userTeam.vo.UserTeamVo">
+   UPDATE 
+            MEET_USER 
+   SET       
+            USER_PASSWORD= #{user_password}
+   WHERE 
+            USER_EMAIL= #{user_email}
+   AND 
+            USER_ID= #{user_id}
+   AND 
+            USER_NAME= #{user_name}
+   </update>
+   
+   <select id="readUser" parameterType="String" resultType="Meet_Us.userTeam.vo.UserTeamVo">
+    SELECT 
+          USER_ID,
+          USER_PASSWORD,
+          USER_NAME,
+          ISACCOUNTNONEXPIRED,
+          ISACCOUNTNONLOCKED,
+          ISCREDENTIALSNONEXPIRED,
+          ISENABLED
+    FROM 
+          MEET_USER 
+    WHERE 
+          USER_ID = #{user_id}
+    AND 
+          USER_AUTHORITY='Y'
+   </select>
+   
+   <insert id="insertAuthority" parameterType="String">
+    INSERT 
+    INTO 
+          AUTHORITY (USER_ID, AUTHORITY_NAME)
+    VALUES
+         (#{user_id}, 'USER') 
+   </insert>
+   
+   <select id="readAuthority" parameterType="String" resultType="String">
+   SELECT 
+            AUTHORITY_NAME 
+   FROM 
+            AUTHORITY 
+   WHERE USER_ID =#{user_id}
+   </select>
+   
+   <select id="userSetting" parameterType="String" resultType="Meet_Us.userTeam.vo.UserTeamVo" >
+   SELECT 
+         USER_ID,
+           USER_NAME,
+           USER_AGE,
+           USER_EMAIL,
+           USER_GENDER,
+           USER_DEFAULTADDRESS
+   FROM 
+         MEET_USER
+    WHERE 
+          USER_NAME=#{user_name}
+    AND 
+          USER_AUTHORITY='Y'
+   </select>
+   
+   <update id="userSettingUpdate" parameterType="Meet_Us.userTeam.vo.UserTeamVo">
+    UPDATE 
+             MEET_USER
+   SET 
+            USER_NAME=#{user_name}, 
+            USER_AGE=#{user_age},
+            USER_GENDER=#{user_gender}
+   WHERE 
+            USER_ID=#{user_id}
+   AND 
+            USER_AUTHORITY='Y'
+   
+   </update>
+   
+   <select id="userPwCheck" parameterType="String" resultType="String">
+    SELECT 
+             USER_PASSWORD
+   FROM 
+            MEET_USER
+   WHERE 
+            USER_NAME=#{user_name}
+   AND 
+            USER_AUTHORITY='Y'
+   </select>
+   
+   <update id="userPwUpdate" parameterType="Meet_Us.userTeam.vo.UserTeamVo">
+   UPDATE 
+               MEET_USER 
+      SET 
+               USER_PASSWORD=#{user_password}
+      WHERE 
+               USER_NAME=#{user_name}
+   </update>
+   
+   <select id="userLsitAdmin" resultType="Meet_Us.userTeam.vo.UserTeamVo">
+   SELECT 
+            USER_ID,
+               USER_EMAIL,
+               USER_NAME,
+               USER_AGE,
+                 USER_GENDER
+   FROM 
+            MEET_USER
+   WHERE 
+            USER_AUTHORITY='Y'
+   </select>
+   
+   <update id="profileDelete">
+   UPDATE 
+               PROFILE_FILE 
+      SET 
+               DELFLAG = 'Y'
+      WHERE 
+               USER_NAME=#{name}
+   </update>
+   
+   <insert id="profileInsert" parameterType="Meet_Us.userTeam.vo.UImageVo">
+		INSERT INTO
+		PROFILE_FILE (USER_NAME, FILE_NAME, FILE_REAL_NAME, FILE_PATH)
+		VALUES (#{user_name},#{file_Name},#{file_Real_Name},#{file_Path})
+	</insert>
+	
+	<select id="profilePath" resultType="String">
+	SELECT FILE_PATH FROM PROFILE_FILE WHERE USER_NAME = #{name} AND DELFLAG = 'N'
+	</select>
+
+</mapper>

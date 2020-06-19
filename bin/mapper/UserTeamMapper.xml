@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Meet_Us.userTeam.dao.UserTeamMapper">
+
+<!-- 	아이디 중복 체크 -->
+	<select id="userIdCheck" parameterType="String" resultType="int">
+	SELECT 
+				COUNT(*) 
+	FROM 
+				MEET_USER 
+	WHERE 
+				USER_ID = #{user_id}
+	</select>
+	
+	<select id="emailIsCheck" parameterType="String" resultType="int">
+	SELECT 
+				COUNT(*) 
+	FROM 
+				MEET_USER 
+	WHERE 
+				USER_EMAIL = #{user_email}
+	</select>
+	
+	<insert id="userInsert" parameterType="Meet_Us.userTeam.vo.UserTeamVo">
+	INSERT INTO 
+	MEET_USER(
+				USER_ID,
+				USER_PASSWORD,
+				USER_EMAIL,
+				USER_NAME,
+				USER_AGE,
+				USER_GENDER,
+				USER_DEFAULTADDRESS) 
+	VALUES(
+				#{user_id},
+				#{user_password},
+				#{user_email},
+				#{user_name},
+				DATE_FORMAT(now(), '%Y') - #{user_age} +1,
+				#{user_gender},
+				#{user_defaultAddress})
+	</insert>
+	
+	
+
+</mapper>

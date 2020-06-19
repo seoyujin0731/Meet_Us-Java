@@ -1,0 +1,182 @@
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+   <definition name="defaultLayout" template="/WEB-INF/views/template/defaultTemplate.jsp" />
+
+	<!-- notification_test 페이지-->
+   <definition name="bootstrap.notification_test" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/notification_test.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- Main 페이지-->
+   <definition name="bootstrap.Home" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/Home.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- MeeterDetail  페이지-->
+   <definition name="bootstrap.MeeterDetail" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/MeeterDetail.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- MeeterMain 페이지-->
+   <definition name="bootstrap.MeeterMain" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/MeeterMain.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- MeetingInsert 페이지-->
+   <definition name="bootstrap.MeeterInsert" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/MeeterInsert.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- MeetingImageInsert 페이지-->
+   <definition name="bootstrap.MeetingImageInsert" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/MeetingImageInsert.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+    <!-- MeetingModify 페이지-->
+   <definition name="bootstrap.MeetingModify" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/MeetingModify.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- Notice 페이지-->
+   <definition name="bootstrap.Notice" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/Notice.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- Notice Detail 페이지-->
+   <definition name="bootstrap.NoticeDetail" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/NoticeDetail.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- Notice Insert 페이지-->
+   <definition name="bootstrap.NoticeInsert" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/NoticeInsert.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- Notice Modify 페이지-->
+   <definition name="bootstrap.NoticeModify" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/NoticeModify.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- Notice Modify 페이지-->
+   <definition name="bootstrap.UserInert" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/UserInsert.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   	<!-- Map 페이지-->
+	<definition name="bootstrap.Map" extends="defaultLayout"> 
+		<put-attribute name="header"		value="/WEB-INF/views/bootstrap/include/header.jsp" />
+		<put-attribute name="body"			value="/WEB-INF/views/bootstrap/Map.jsp" />
+		<put-attribute name="footer"		value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+	</definition>
+	
+	<!-- Developers 페이지-->
+	<definition name="bootstrap.Developers" extends="defaultLayout"> 
+		<put-attribute name="header"		value="/WEB-INF/views/bootstrap/include/header.jsp" />
+		<put-attribute name="body"			value="/WEB-INF/views/bootstrap/Developers.jsp" />
+		<put-attribute name="footer"		value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+	</definition>
+	
+   <!-- 사용자 회원가입 페이지-->
+   <definition name="bootstrap.UserInsert" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/UserInsert.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- 사용자 로그인 페이지-->
+   <definition name="bootstrap.Login" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/Login.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+    <!-- selectSocial 페이지-->
+   <definition name="bootstrap.selectSocial" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/selectSocial.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   	
+	<!--메일 인증 넘어가기-->
+    <definition name="bootstrap.SuccessPage" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/SuccessPage.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!--계정 찾기 -->
+    <definition name="bootstrap.UserSearch" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/UserSearch.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+	<!-- MyPage -->
+    <definition name="bootstrap.MyPage" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/MyPage.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   	<!--AdminPage -->
+    <definition name="bootstrap.AdminPage" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/AdminPage.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- 자기 정보 확인 -->
+    <definition name="bootstrap.UserSetting" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/UserSetting.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+
+   <!-- 자기 정보 수정 -->
+     <definition name="bootstrap.UserSettingModify" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/UserSettingModify.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+   <!-- 관리자 페이지 -->
+    <definition name="bootstrap.AdminManager" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/AdminManager.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+   
+    <!-- MyPageImageSave -->
+    <definition name="bootstrap.MyPageImageSave" extends="defaultLayout"> 
+      <put-attribute name="header"      value="/WEB-INF/views/bootstrap/include/header.jsp" />
+      <put-attribute name="body"         value="/WEB-INF/views/bootstrap/MyPageImageSave.jsp" />
+      <put-attribute name="footer"      value="/WEB-INF/views/bootstrap/include/footer.jsp" />
+   </definition>
+
+</tiles-definitions>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Meet_Us.board.dao.BoardMapper">
+
+<cache flushInterval="1000" />
+        
+<select id="selectBoardList" parameterType="Meet_Us.board.vo.BoardVo" resultType="Meet_Us.board.vo.BoardVo" >
+	SELECT 
+    					@rownum:=@rownum+1 No,
+   					 	BOARD_NO,
+  	 				 	BOARD_TITLE,
+   					 	BOARD_CONTENT,
+   					 	DATE_FORMAT(BOARD_INSERTDATE, '%Y-%m-%d') AS BOARD_INSERTDATE,
+						DATE_FORMAT(BOARD_MODIFYDATE, '%Y-%m-%d') AS BOARD_MODIFYDATE,
+  					  	BOARD_VIEWCOUNT,
+  					  	USER_ID,
+  					  	BOARD_DELFLAG
+	FROM 
+						MEET_BOARD,
+						(SELECT @rownum:=0) r
+	WHERE 
+						BOARD_DELFLAG = 'N'
+	ORDER BY                   
+						NO DESC, BOARD_NO DESC
+</select>
+
+<select id="selectBoardPageList" parameterType="hashmap" resultType="Meet_Us.board.vo.BoardVo" >
+	<![CDATA[
+		SELECT 
+    					@rownum:=@rownum+1 No,
+   					 	BOARD_NO,
+  	 				 	BOARD_TITLE,
+   					 	BOARD_CONTENT,
+   					 	DATE_FORMAT(BOARD_INSERTDATE, '%Y-%m-%d') AS BOARD_INSERTDATE,
+						DATE_FORMAT(BOARD_MODIFYDATE, '%Y-%m-%d') AS BOARD_MODIFYDATE,
+  					  	BOARD_VIEWCOUNT,
+  					  	USER_ID,
+  					  	BOARD_DELFLAG
+		FROM 
+						MEET_BOARD,
+						(SELECT @rownum:=0) r
+		WHERE 
+						BOARD_DELFLAG = 'N'
+		ORDER BY                   
+						NO DESC, BOARD_NO DESC
+		LIMIT 
+						#{pageStart}, #{perPageNum}
+	]]>
+</select>
+
+<select id="selectCountBoardList" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+    					@rownum:=@rownum+1 No,
+   					 	BOARD_NO,
+  					  	BOARD_DELFLAG
+		FROM 
+						MEET_BOARD,
+						(SELECT @rownum:=0) r
+   		WHERE
+       				    BOARD_DELFLAG = 'N'
+	]]>
+</select>
+
+<!-- 검색 후 리스트 쿼리문 -->
+<select id="selectSearchPageList" parameterType="Meet_Us.board.vo.PageCriteria" resultType="Meet_Us.board.vo.BoardVo">
+	<![CDATA[
+		SELECT 
+    					@rownum:=@rownum+1 No,
+   					 	BOARD_NO,
+  	 				 	BOARD_TITLE,
+   					 	BOARD_CONTENT,
+   					 	DATE_FORMAT(BOARD_INSERTDATE, '%Y-%m-%d') AS BOARD_INSERTDATE,
+						DATE_FORMAT(BOARD_MODIFYDATE, '%Y-%m-%d') AS BOARD_MODIFYDATE,
+  					  	BOARD_VIEWCOUNT,
+  					  	USER_ID,
+  					  	BOARD_DELFLAG
+		FROM 
+						MEET_BOARD,
+						(SELECT @rownum:=0) r
+		WHERE 
+						BOARD_DELFLAG = 'N'
+                        AND BOARD_TITLE LIKE CONCAT('%', #{keyword}, '%')
+						OR BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%')
+						OR USER_ID LIKE CONCAT('%', #{keyword}, '%')
+		ORDER BY                   
+						NO DESC, BOARD_NO DESC
+		LIMIT 
+						#{pageStart}, #{perPageNum}
+	]]>
+</select>
+
+<select id="selectCountSearchList" parameterType="String" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+    					@rownum:=@rownum+1 No,
+   					 	BOARD_NO,
+  	 				 	BOARD_TITLE,
+   					 	BOARD_CONTENT,
+  					  	USER_ID,
+  					  	BOARD_DELFLAG
+		FROM 
+						MEET_BOARD,
+						(SELECT @rownum:=0) r
+   		WHERE
+       				    BOARD_DELFLAG = 'N'
+                        AND BOARD_TITLE LIKE CONCAT('%', #{keyword}, '%')
+						OR BOARD_CONTENT LIKE CONCAT('%', #{keyword}, '%')
+						OR USER_ID LIKE CONCAT('%', #{keyword}, '%')
+	]]>
+</select>
+
+<select id="selectBoardDetail" parameterType="Meet_Us.board.vo.BoardVo" resultType="Meet_Us.board.vo.BoardVo">
+	SELECT 
+						BOARD_NO,
+						BOARD_TITLE,
+						BOARD_CONTENT,
+						DATE_FORMAT(BOARD_INSERTDATE, '%Y-%m-%d') AS BOARD_INSERTDATE,
+						DATE_FORMAT(BOARD_MODIFYDATE, '%Y-%m-%d') AS BOARD_MODIFYDATE,
+						BOARD_VIEWCOUNT,
+						USER_ID,
+						BOARD_DELFLAG
+	FROM 
+						MEET_BOARD,
+    					(SELECT @rownum:=0) r
+	WHERE 
+						BOARD_DELFLAG = 'N'
+	AND 
+						BOARD_NO = #{board_no}
+</select>
+
+<update id="deleteBoard" parameterType="int">
+	UPDATE 
+						MEET_BOARD 
+	SET 
+						BOARD_DELFLAG = "Y" 
+	WHERE 
+						BOARD_NO = #{board_no}
+</update>
+
+<insert id="insertBoard" parameterType="Meet_Us.board.vo.BoardVo">
+	INSERT INTO 
+						MEET_BOARD(USER_ID , BOARD_TITLE, BOARD_CONTENT) 
+	VALUES 
+						(#{user_id} , #{board_title} , #{board_content})
+</insert>
+
+<update id="ModifyBoard" parameterType="Meet_Us.board.vo.BoardVo">
+	UPDATE 
+						MEET_BOARD 
+	SET 
+						BOARD_TITLE = #{board_title} , 
+						BOARD_CONTENT = #{board_content} , 
+						BOARD_MODIFYDATE = NOW() 
+	WHERE 
+						BOARD_NO = #{board_no}; 
+</update>
+
+<update id="IncreaseBoardViewCount" parameterType="Meet_Us.board.vo.BoardVo">
+	UPDATE 
+						MEET_BOARD 
+	SET 
+						BOARD_VIEWCOUNT = BOARD_VIEWCOUNT + 1 
+	WHERE 
+						BOARD_NO = #{board_no};
+</update>
+
+	<insert id="fileInsert" parameterType="Meet_Us.board.vo.FileVo">
+		INSERT INTO
+		NOTICE_BOARD_FILE (UP_SEQ, FILE_NAME, FILE_REAL_NAME, FILE_PATH)
+		VALUES (#{up_Seq},#{file_Name},#{file_Real_Name},#{file_Path})
+	</insert>
+	
+	<select id="fileDetail" parameterType="int" resultType="Meet_Us.board.vo.FileVo">
+		SELECT * FROM NOTICE_BOARD_FILE WHERE UP_SEQ=#{seq} AND DELFLAG = 'N'
+	</select>
+	
+	<select id="downloadFileName" parameterType="map" resultType="String">
+		SELECT 
+			FILE_REAL_NAME 
+		FROM 
+			NOTICE_BOARD_FILE 
+		WHERE 
+			UP_SEQ=#{up_Seq} 
+		AND 
+			SEQ=#{seq} 
+		AND 
+			DELFLAG = 'N'
+	</select>
+	
+	<update id="fileDelete" parameterType="map" >
+		UPDATE
+			NOTICE_BOARD_FILE
+		SET
+			DELFLAG = 'Y'
+			,LAST_DT = now()
+		WHERE 
+			UP_SEQ=#{up_Seq} 
+			AND SEQ=#{seq}
+	</update>
+	
+	<update id="fileDeleteAll" parameterType="Integer" >
+		UPDATE
+			NOTICE_BOARD_FILE
+		SET
+			DELFLAG = 'Y'
+			,LAST_DT = now()
+		WHERE 
+			UP_SEQ=#{seq}
+	</update> 
+	
+	<update id="fileDownloadCnt" parameterType="Integer" >
+		UPDATE
+			NOTICE_BOARD_FILE
+		SET
+			DOWN_CNT = DOWN_CNT + 1
+		WHERE 
+			UP_SEQ=#{up_Seq} 
+			AND SEQ=#{seq}
+	</update>
+	
+	<select id="latelyBoard" resultType="int" >
+		SELECT COUNT(*) FROM MEET_BOARD
+	</select>
+
+</mapper>

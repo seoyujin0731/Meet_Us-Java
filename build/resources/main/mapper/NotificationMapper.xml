@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Meet_Us.Notification.dao.NotificationMapper">
+
+<insert id="InsertPushUser">
+INSERT INTO 
+						PUSH_USER(PUSH_USER_NAME, PUSH_USER_TOKEN) 
+	VALUES 
+						(#{name} , #{token})
+</insert>
+
+<select id="SelectPushUser" resultType="String">
+SELECT PUSH_USER_NAME FROM PUSH_USER WHERE PUSH_USER_NAME = #{name}
+</select>
+
+<select id="SelectPushUserActice" resultType="String">
+SELECT PUSH_USER_NAME FROM PUSH_USER WHERE PUSH_USER_NAME = #{name} AND PUSH_DELFLAG='N'
+</select>
+
+
+<update id="DeletePushUser" >
+	UPDATE 
+						PUSH_USER 
+	SET 
+						PUSH_DELFLAG = 'Y', PUSH_USER_UrD = NOW()
+	WHERE 
+						PUSH_USER_NAME = #{name}
+</update>
+
+<update id="UpdatePushUser" >
+	UPDATE 
+						PUSH_USER 
+	SET 
+						PUSH_DELFLAG = 'N', PUSH_USER_TOKEN = #{token},PUSH_USER_UrD = NOW()
+	WHERE 
+						PUSH_USER_NAME = #{name}
+</update>
+
+</mapper>
